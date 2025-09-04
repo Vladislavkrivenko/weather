@@ -1,5 +1,7 @@
 package dto;
 
-public record SessionDto() {
+import java.time.LocalDateTime;
+
+public record SessionDto(int userId, LocalDateTime startTime, LocalDateTime endTime) {
 
 }
