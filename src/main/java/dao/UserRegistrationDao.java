@@ -17,7 +17,7 @@ public class UserRegistrationDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public UserEntity saveUser(UserEntity user) {
+    public void registrationUser(UserEntity user) {
         if (user == null) {
             log.debug("user is null");
             throw new IllegalArgumentException("User cannot be null");
@@ -29,7 +29,6 @@ public class UserRegistrationDao {
                 session.persist(user);
                 transaction.commit();
                 log.debug("user has been saved successfully");
-                return user;
             } catch (Exception e) {
                 if (transaction != null) transaction.rollback();
                 log.error("save user exception", e);

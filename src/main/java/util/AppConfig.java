@@ -2,6 +2,8 @@ package util;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import entity.LocationEntity;
+import entity.SessionEntity;
 import entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
@@ -18,7 +20,7 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/weather");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/weather");
         config.setUsername("postgres");
         config.setPassword("pass");
         config.setMaximumPoolSize(10);
@@ -43,6 +45,8 @@ public class AppConfig {
             configuration.setProperty("hibernate.show_sql", "true");
             configuration.setProperty("hibernate.format_sql", "true");
             configuration.addAnnotatedClass(UserEntity.class);
+            configuration.addAnnotatedClass(SessionEntity.class);
+            configuration.addAnnotatedClass(LocationEntity.class);
 
             StandardServiceRegistryBuilder registryBuilder =
                     new StandardServiceRegistryBuilder()

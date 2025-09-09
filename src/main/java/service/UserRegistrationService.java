@@ -19,15 +19,13 @@ public class UserRegistrationService {
         this.userMapper = userMapper;
     }
 
-    public UserEntity userRegistration(UserDto userDto) {
+    public UserEntity saveUser(UserDto userDto) {
         String pass = HashPassword.hashPassword(userDto.password());
         UserEntity userEntity = userMapper.entity(userDto);
         userEntity.setPassword(pass);
-        userRegistrationDao.saveUser(userEntity);
+        userRegistrationDao.registrationUser(userEntity);
         log.debug("User registered: {}", userEntity.getLogin());
         return userEntity;
     }
-
-
 }
 
