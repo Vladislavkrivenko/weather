@@ -1,6 +1,7 @@
 package dao;
 
 import entity.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -11,7 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-// TODO додати логування
+
+@Slf4j
 @Repository
 public class UserAuthorizationDao {
     private final SessionFactory sessionFactory;
@@ -22,21 +24,13 @@ public class UserAuthorizationDao {
 
     public Optional<UserEntity> findByLogin(String login) throws SQLException {
         try (Session session = sessionFactory.openSession()) {
-            return session.doReturningWork(connection -> {
-                String sql = "SELECT * FROM Users WHERE login = ?";
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                    ps.setString(1, login);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            UserEntity user = new UserEntity();
-                            user.setLogin(rs.getString("login"));
-                            user.setPassword(rs.getString("password"));
-                            return Optional.of(user);
-                        }
-                    }
-                }
-                return Optional.empty();
-            });
+            String hql = "FROM UserEntity u WHERE u.login = :login";
+            return session.createQuery(hql, UserEntity.class)
+                    .setParameter("login", login)
+                    .uniqueResultOptional();
+        } catch (Exception e) {
+            log.error("Error finding user by login={}", login, e);
+            return Optional.empty();
         }
     }
 }

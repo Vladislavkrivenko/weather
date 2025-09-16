@@ -1,5 +1,6 @@
 package dao;
 
+import entity.SessionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,8 +22,8 @@ public class LogoutDao {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-            String sql = "DELETE FROM SessionEntity WHERE id = ?";
-            session.createQuery(sql)
+            String hql = "DELETE FROM SessionEntity WHERE id = :id";
+            session.createQuery(hql, SessionEntity.class)
                     .setParameter("id", sessionId)
                     .executeUpdate();
             tx.commit();
@@ -30,7 +31,7 @@ public class LogoutDao {
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
-                log.error("Rollback of session with id {}", sessionId);
+                log.error("Rollback of session with id {}", sessionId, e);
             }
             throw e;
         }

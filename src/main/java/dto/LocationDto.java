@@ -2,5 +2,5 @@ package dto;
 
 import java.math.BigDecimal;
 
-public record LocationDto(String nameCity, int UserId, BigDecimal latitude, BigDecimal longitude) {
+public record LocationDto(String nameCity, Integer UserId, BigDecimal latitude, BigDecimal longitude) {
 }

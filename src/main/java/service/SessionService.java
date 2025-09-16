@@ -2,6 +2,7 @@ package service;
 
 import dao.SessionDao;
 import entity.SessionEntity;
+import entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +21,11 @@ public class SessionService {
         this.sessionDao = sessionDao;
     }
 
-    public UUID createSessions(int userId) {
+    public UUID createSessions(UserEntity user) {
         UUID sessionId = uuid.randomUUID();
         SessionEntity sessionEntity = new SessionEntity();
         sessionEntity.setId(sessionId);
-        sessionEntity.setUser_id(userId);
+        sessionEntity.setUser(user);
         sessionEntity.setExpires_at(LocalDateTime.now().plusHours(2));
         sessionDao.saveSession(sessionEntity);
         log.debug("sessionId is created: {}", sessionId);

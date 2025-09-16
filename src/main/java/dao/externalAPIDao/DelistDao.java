@@ -7,6 +7,8 @@ import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @Repository
 public class DelistDao {
@@ -16,20 +18,22 @@ public class DelistDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public void deleteLocationByName(String name) {
+    public void deleteLocationByName(BigDecimal latitude, BigDecimal longitude) {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-            String sql = "DELETE FROM Locations WHERE name=:name";
-            session.createQuery(sql)
-                    .setParameter("name", name)
+            String hql =
+                    "DELETE FROM LocationEntity WHERE latitude = :latitude AND longitude = longitude";
+            session.createQuery(hql)
+                    .setParameter("latitude", latitude)
+                    .setParameter("longitude", longitude)
                     .executeUpdate();
             tx.commit();
-            log.info("Deleted location with name " + name);
+            log.info("Deleted location with latitude={} and longitude{}", latitude, longitude);
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
-                log.error("RollBack of deleteLocationByName {}", name);
+                log.error("RollBack of location with latitude {} and longitude{}", latitude, longitude);
             }
         }
     }

@@ -25,12 +25,13 @@ public class SessionDao {
         if (sessionEntity == null) {
             throw new IllegalArgumentException("sessionEntity cannot be null");
         }
+        Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
-            Transaction tx = session.beginTransaction();
+            tx = session.beginTransaction();
             try {
                 session.persist(sessionEntity);
-                log.info("Session has been saved successfully");
                 tx.commit();
+                log.info("Session has been saved successfully");
             } catch (Exception e) {
                 if (tx != null) tx.rollback();
                 log.error("save session exception", e);
@@ -41,18 +42,14 @@ public class SessionDao {
 
     public Optional<Integer> findUserBySession(UUID sessionId) {
         try (Session session = sessionFactory.openSession()) {
-            return session.doReturningWork(connection -> {
-                String sql = "SELECT user_id FROM sessions WHERE id = ?";
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                    ps.setObject(1, sessionId);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next())
-                            return Optional.of(rs.getInt("user_id"));
-                        return Optional.empty();
-                    }
-
-                }
-            });
+            String hql = "SELECT s.user.id FROM SessionEntity s WHERE s.id = :id";
+            return session.createQuery(hql, Integer.class)
+                    .setParameter("id", sessionId)
+                    .uniqueResultOptional();
+        } catch (Exception e) {
+            log.error("findUserBySession exception", e);
+            return Optional.empty();
         }
     }
 }
+
