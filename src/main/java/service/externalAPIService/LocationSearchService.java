@@ -1,6 +1,7 @@
 package service.externalAPIService;
 
 import dto.LocationDto;
+import entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class LocationSearchService {
                 BigDecimal longitude = new BigDecimal(coordinates.get("lon").toString());
                 BigDecimal latitude = new BigDecimal(coordinates.get("lat").toString());
 
-                return Optional.of(new LocationDto(name, null, latitude, longitude));
+                return Optional.of(new LocationDto(name, null, latitude, longitude));//
             }
         } catch (Exception e) {
             log.error("Error fetching location from external API: {}", e.getMessage(), e);

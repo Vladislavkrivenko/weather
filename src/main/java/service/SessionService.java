@@ -16,8 +16,7 @@ public class SessionService {
     private UUID uuid;
     private final SessionDao sessionDao;
 
-    public SessionService(UUID uuid, SessionDao sessionDao) {
-        this.uuid = uuid;
+    public SessionService(SessionDao sessionDao) {
         this.sessionDao = sessionDao;
     }
 

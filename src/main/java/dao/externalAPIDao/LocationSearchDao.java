@@ -21,7 +21,7 @@ public class LocationSearchDao {
 
     public Optional<LocationEntity> findLocationByName(String name) {
         try (Session session = sessionFactory.openSession()) {
-            String hql = "FROM LocationEntity WHERE name = name";
+            String hql = "FROM LocationEntity WHERE name = :name";
             return session.createQuery(hql, LocationEntity.class)
                     .setParameter("name", name)
                     .uniqueResultOptional();

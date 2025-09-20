@@ -18,22 +18,22 @@ public class DelistDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public void deleteLocationByName(BigDecimal latitude, BigDecimal longitude) {
+    public void deleteLocationByName(String name) {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
             String hql =
-                    "DELETE FROM LocationEntity WHERE latitude = :latitude AND longitude = longitude";
+                    "DELETE FROM LocationEntity WHERE name = :name";
             session.createQuery(hql)
-                    .setParameter("latitude", latitude)
-                    .setParameter("longitude", longitude)
+                    .setParameter("name", name)
                     .executeUpdate();
             tx.commit();
-            log.info("Deleted location with latitude={} and longitude{}", latitude, longitude);
+            log.info("Deleted location with name = {}", name);
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
-                log.error("RollBack of location with latitude {} and longitude{}", latitude, longitude);
+                log.error("RollBack of location with name = {}", name);
+                throw e;
             }
         }
     }

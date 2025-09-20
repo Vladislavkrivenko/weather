@@ -24,13 +24,13 @@ public class LocationAddingDao {
         Transaction tx = null;
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
-                session.persist(location);
-                tx.commit();
+            session.persist(location);
+            tx.commit();
             log.info("Location added successfully: {}", location);
-            } catch (Exception e) {
-                log.error("save Location exception", e);
-                if (tx != null) tx.rollback();
-                throw e;
+        } catch (Exception e) {
+            log.error("save Location exception", e);
+            if (tx != null) tx.rollback();
+            throw e;
         }
     }
 }

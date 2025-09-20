@@ -1,5 +1,7 @@
-DELETE
-FROM users
-WHERE login = 'john';
 
-DROP TABLE sessions;
+
+DROP DATABASE weather;
+
+CREATE DATABASE weatherS;
+
+CREATE DATABASE weather;

@@ -25,7 +25,7 @@ public class SessionServlet extends HttpServlet {
         if (user == null) {
             user = SessionDto.builder()
                     .id(uuid)
-                    .userId(1)
+                    .user_id(1)
                     .expires_at(now())
                     .build();
             session.setAttribute(USER, user);
