@@ -16,7 +16,6 @@ public class LogoutService {
     }
 
     public void invalidateSession(UUID sessionId) {
-
         logoutDao.deleteSession(sessionId);
     }
 }

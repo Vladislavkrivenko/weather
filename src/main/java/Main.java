@@ -1,66 +1,40 @@
-import dao.UserAuthorizationDao;
-import dao.UserRegistrationDao;
-import dao.externalAPIDao.DelistDao;
-import dao.externalAPIDao.LocationAddingDao;
-import dao.externalAPIDao.LocationSearchDao;
-import dto.LocationDto;
-import dto.UserDto;
-import entity.LocationEntity;
-import entity.UserEntity;
-import mapper.LocationMapper;
-import mapper.UserMapper;
-import mapper.UserMapperImpl;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import service.UserAuthorizationService;
-import service.UserRegistrationService;
-import service.externalAPIService.LocationAddingService;
-import service.externalAPIService.LocationSearchService;
-import util.AppConfig;
-import util.RestTemplateConf;
-import util.hashPass.HashPassword;
-
-import java.util.Optional;
-
 public class Main {
     public static void main(String[] args) {
-
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(AppConfig.class, RestTemplateConf.class);
-
-        try {
-            LocationAddingService locationAddingService = context.getBean(LocationAddingService.class);
-            LocationSearchDao searchDao = context.getBean(LocationSearchDao.class);
-            LocationMapper locationMapper = context.getBean(LocationMapper.class);
-            SessionFactory sessionFactory = context.getBean(SessionFactory.class);
-
-            // Отримуємо існуючого користувача
-            UserEntity user;
-            try (Session session = sessionFactory.openSession()) {
-                Integer existingUserId = 1;
-              user = session.<UserEntity>get(UserEntity.class, existingUserId);
-                if (user == null) {
-                    throw new IllegalStateException("User with id " + existingUserId + " not found");
-                }
-            }
-
-            // Додаємо локацію через сервіс
-            String cityName = "Kyiv";
-            locationAddingService.addLocation(cityName, user);
-            System.out.println("✅ Локація додана для користувача: " + user.getLogin());
-
-            // Перевіряємо, чи збереглася локація
-            Optional<LocationEntity> foundEntity = searchDao.findLocationByName(cityName);
-            foundEntity.ifPresentOrElse(
-                    e -> System.out.println("🔎 Локація знайдена в БД: " + locationMapper.dto(e)),
-                    () -> System.out.println("❌ Локація не знайдена в БД")
-            );
-
-        } finally {
-            context.close();
-        }
+//
+//        AnnotationConfigApplicationContext context =
+//                new AnnotationConfigApplicationContext(AppConfig.class, RestTemplateConf.class);
+//
+//        try {
+//            LocationAddingService locationAddingService = context.getBean(LocationAddingService.class);
+//            LocationSearchDao searchDao = context.getBean(LocationSearchDao.class);
+//            LocationMapper locationMapper = context.getBean(LocationMapper.class);
+//            SessionFactory sessionFactory = context.getBean(SessionFactory.class);
+//
+//            // Отримуємо існуючого користувача
+//            UserEntity user;
+//            try (Session session = sessionFactory.openSession()) {
+//                Integer existingUserId = 1;
+//              user = session.<UserEntity>get(UserEntity.class, existingUserId);
+//                if (user == null) {
+//                    throw new IllegalStateException("User with id " + existingUserId + " not found");
+//                }
+//            }
+//
+//            // Додаємо локацію через сервіс
+//            String cityName = "Kyiv";
+//            locationAddingService.addLocation(cityName, user);
+//            System.out.println("✅ Локація додана для користувача: " + user.getLogin());
+//
+//            // Перевіряємо, чи збереглася локація
+//            Optional<LocationEntity> foundEntity = searchDao.findLocationByName(cityName);
+//            foundEntity.ifPresentOrElse(
+//                    e -> System.out.println("🔎 Локація знайдена в БД: " + locationMapper.dto(e)),
+//                    () -> System.out.println("❌ Локація не знайдена в БД")
+//            );
+//
+//        } finally {
+//            context.close();
+//        }
     }
 }
 //public class Main {

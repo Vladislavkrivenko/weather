@@ -1,7 +1,1 @@
 
-
-DROP DATABASE weather;
-
-CREATE DATABASE weatherS;
-
-CREATE DATABASE weather;

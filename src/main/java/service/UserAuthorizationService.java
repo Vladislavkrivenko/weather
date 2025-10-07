@@ -21,7 +21,7 @@ public class UserAuthorizationService {
         this.userMapper = userMapper;
     }
 
-    public Optional<UserDto> login(String login, String rawPassword) throws SQLException {
+    public Optional<UserDto> loginUser(String login, String rawPassword) throws SQLException {
         if (login == null || login.isEmpty() || rawPassword == null || rawPassword.isEmpty()) {
             log.debug("login or rawPassword is null");
             throw new IllegalArgumentException("login or rawPassword is null");
