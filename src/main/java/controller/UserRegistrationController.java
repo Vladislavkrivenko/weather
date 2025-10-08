@@ -15,7 +15,7 @@ import service.UserRegistrationService;
 @Controller
 @RequestMapping("/register")
 public class UserRegistrationController {
-    private UserRegistrationService userRegistrationService;
+    private final UserRegistrationService userRegistrationService;
 
     @Autowired
     public UserRegistrationController(UserRegistrationService userRegistrationService) {

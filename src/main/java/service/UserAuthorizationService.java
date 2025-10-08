@@ -22,12 +22,17 @@ public class UserAuthorizationService {
     }
 
     public Optional<UserDto> loginUser(String login, String rawPassword) throws SQLException {
-        if (login == null || login.isEmpty() || rawPassword == null || rawPassword.isEmpty()) {
-            log.debug("login or rawPassword is null");
-            throw new IllegalArgumentException("login or rawPassword is null");
+        try {
+            if (login == null || login.isEmpty() || rawPassword == null || rawPassword.isEmpty()) {
+                log.debug("login or rawPassword is null");
+                throw new IllegalArgumentException("login or rawPassword is null");
+            }
+            return userAuthorizationDao.findByLogin(login)
+                    .filter(user -> HashPassword.checkPassword(rawPassword, user.getPassword()))
+                    .map(userMapper::dto);
+        }catch (Exception e){
+            log.error("login or rawPassword is null", e);
+            throw e;
         }
-        return userAuthorizationDao.findByLogin(login)
-                .filter(user -> HashPassword.checkPassword(rawPassword, user.getPassword()))
-                .map(userMapper::dto);
     }
 }

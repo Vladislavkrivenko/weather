@@ -13,15 +13,15 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class SessionService {
-    private UUID uuid;
     private final SessionDao sessionDao;
+
 
     public SessionService(SessionDao sessionDao) {
         this.sessionDao = sessionDao;
     }
 
     public UUID createSessions(UserEntity user) {
-        UUID sessionId = uuid.randomUUID();
+        UUID sessionId = UUID.randomUUID();
         SessionEntity sessionEntity = new SessionEntity();
         sessionEntity.setId(sessionId);
         sessionEntity.setUser(user);

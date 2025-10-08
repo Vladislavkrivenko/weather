@@ -1,6 +1,5 @@
 package dao;
 
-import entity.SessionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -23,7 +22,7 @@ public class LogoutDao {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
             String hql = "DELETE FROM SessionEntity WHERE id = :id";
-            session.createQuery(hql, SessionEntity.class)
+            session.createQuery(hql)
                     .setParameter("id", sessionId)
                     .executeUpdate();
             tx.commit();

@@ -1,22 +1,32 @@
 package controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import mapper.UserMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.SessionService;
 import service.UserAuthorizationService;
+import util.CookieUtil;
+
+import java.util.UUID;
 
 @Slf4j
 @Controller
 @RequestMapping("/auth")
 public class UserAuthorizationController {
     private final UserAuthorizationService userAuthorizationService;
+    private final SessionService sessionService;
+    private final UserMapper userMapper;
 
-    public UserAuthorizationController(UserAuthorizationService userAuthorizationService) {
+    public UserAuthorizationController(UserAuthorizationService userAuthorizationService, SessionService sessionService, UserMapper userMapper) {
         this.userAuthorizationService = userAuthorizationService;
+        this.sessionService = sessionService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/login")
@@ -27,12 +37,15 @@ public class UserAuthorizationController {
     @PostMapping("/login")
     public String login(@RequestParam String login,
                         @RequestParam String password,
-                        Model model) {
+                        Model model,
+                        HttpServletResponse response) {
         try {
             return userAuthorizationService.loginUser(login, password)
                     .map(user -> {
-                        log.info("User {} successfully logged in", user.login());
-                        model.addAttribute("user", user);
+                        log.debug("User {} successfully logged in", user.login());
+                        UUID sessionId = sessionService.createSessions(userMapper.entity(user));
+                        CookieUtil.addCookie(response, "SESSION_ID", sessionId.toString(), 1800);
+
                         return "redirect:/home";
                     })
                     .orElseGet(() -> {
