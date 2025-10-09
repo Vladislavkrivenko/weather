@@ -3,6 +3,7 @@ package controller;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,18 +17,17 @@ import util.CookieUtil;
 import java.util.UUID;
 
 @Slf4j
+
 @Controller
 @RequestMapping("/auth")
 public class UserAuthorizationController {
-    private final UserAuthorizationService userAuthorizationService;
-    private final SessionService sessionService;
-    private final UserMapper userMapper;
+    @Autowired
+    private UserAuthorizationService userAuthorizationService;
+    @Autowired
+    private SessionService sessionService;
+    @Autowired
+    private UserMapper userMapper;
 
-    public UserAuthorizationController(UserAuthorizationService userAuthorizationService, SessionService sessionService, UserMapper userMapper) {
-        this.userAuthorizationService = userAuthorizationService;
-        this.sessionService = sessionService;
-        this.userMapper = userMapper;
-    }
 
     @GetMapping("/login")
     public String loginPage() {

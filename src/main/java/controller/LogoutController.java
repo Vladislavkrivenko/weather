@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +18,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/logout")
 public class LogoutController {
-    private final LogoutService logoutService;
-
-    public LogoutController(LogoutService logoutService) {
-        this.logoutService = logoutService;
-    }
+    @Autowired
+    private LogoutService logoutService;
 
     @PostMapping
     public String logout(HttpServletResponse response, HttpServletRequest request) {
@@ -36,7 +34,7 @@ public class LogoutController {
                         } catch (IllegalArgumentException e) {
                             log.warn("Invalid session id {}", e);
                         }
-                        CookieUtil.removeCookie(response,"SESSION_ID");
+                        CookieUtil.removeCookie(response, "SESSION_ID");
                     });
 
         }

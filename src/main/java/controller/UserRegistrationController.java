@@ -15,12 +15,8 @@ import service.UserRegistrationService;
 @Controller
 @RequestMapping("/register")
 public class UserRegistrationController {
-    private final UserRegistrationService userRegistrationService;
-
     @Autowired
-    public UserRegistrationController(UserRegistrationService userRegistrationService) {
-        this.userRegistrationService = userRegistrationService;
-    }
+    private UserRegistrationService userRegistrationService;
 
     @GetMapping("/register")
     public String registerForm(Model model, UserDto userDto) {

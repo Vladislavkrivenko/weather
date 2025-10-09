@@ -1,38 +1,38 @@
 package service.externalAPIService;
 
+import dao.UserDao;
 import dao.externalAPIDao.LocationAddingDao;
-import dao.externalAPIDao.LocationSearchDao;
 import dto.LocationDto;
 import entity.LocationEntity;
 import entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class LocationAddingService {
     private final LocationAddingDao locationAddingDao;
     private final LocationSearchService locationSearchService;
+    private final UserDao userDao;
 
-    public LocationAddingService(LocationAddingDao locationAddingDao, LocationSearchService locationSearchService) {
+    public LocationAddingService(LocationAddingDao locationAddingDao, LocationSearchService locationSearchService, UserDao userDao) {
         this.locationAddingDao = locationAddingDao;
         this.locationSearchService = locationSearchService;
+        this.userDao = userDao;
     }
 
-    public void addLocation(String name, UserEntity user) {
-        if (name == null || name.isEmpty() || user == null) {
+    public void addLocation(String name, Integer userId) {
+        if (name == null || name.isEmpty() || userId == null) {
             log.error("Invalid Input");
             throw new IllegalArgumentException("Invalid Input");
         }
-        Optional<LocationDto> locationDtoOpt = locationSearchService.searchLocation(name);
-        if (locationDtoOpt.isEmpty()) {
-            log.error("Location not found for city: {}", name);
-            throw new IllegalArgumentException("Location not found for city: " + name);
-        }
-        LocationDto locationDto = locationDtoOpt.get();
+
+        LocationDto locationDto = locationSearchService.searchLocation(name)
+                .orElseThrow(() -> new IllegalArgumentException("City not found: " + name));
+
+        UserEntity user = userDao.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for id: " + userId));
+
         LocationEntity locationEntity = new LocationEntity();
         locationEntity.setName(locationDto.name());
         locationEntity.setLatitude(locationDto.latitude());
